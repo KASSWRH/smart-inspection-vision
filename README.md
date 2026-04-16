@@ -54,7 +54,7 @@ smart-inspection-vision/
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-username/smart-inspection-vision.git
+git clone https://github.com/KASSWRH/smart-inspection-vision.git
 cd smart-inspection-vision
 
 python -m venv venv
