@@ -1,0 +1,73 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.10"
+  IMAGE_NAME: smart-inspection-vision
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint (flake8 + isort)
+        run: |
+          flake8 app/ tests/ --max-line-length=100 --ignore=E501,W503
+          isort --check-only app/ tests/
+
+      - name: Type check (mypy)
+        run: mypy app/ --ignore-missing-imports
+        continue-on-error: true
+
+      - name: Run tests
+        run: pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
+        env:
+          ENVIRONMENT: development
+          SECRET_KEY: test-secret-key-32-characters-long
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          docker build \
+            -f deployment/docker/Dockerfile \
+            -t ${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ${{ env.IMAGE_NAME }}:latest \
+            .
+
+      - name: Run container smoke test
+        run: |
+          docker run -d --name test-api -p 8000:8000 \
+            -e ENVIRONMENT=development \
+            -e SECRET_KEY=test-secret-key-32-characters-long \
+            ${{ env.IMAGE_NAME }}:latest
+          sleep 10
+          curl --fail http://localhost:8000/api/v1/health
+          docker stop test-api
