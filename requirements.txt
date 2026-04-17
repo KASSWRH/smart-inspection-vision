@@ -3,36 +3,36 @@
 # ============================================================
 
 # --- Core Framework ---
-fastapi==0.110.0
-uvicorn[standard]==0.27.1
-python-multipart==0.0.9
-pydantic==2.6.3
-pydantic-settings==2.2.1
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.1
+python-multipart>=0.0.9
+pydantic>=2.6.3
+pydantic-settings>=2.2.1
 
 # --- Computer Vision & Deep Learning ---
-torch==2.2.1
-torchvision==0.17.1
-ultralytics==8.1.28          # YOLOv8
-opencv-python-headless==4.9.0.80
-Pillow==10.2.0
-scikit-image==0.22.0         # SSIM for before/after comparison
-numpy==1.26.4
-albumentations==1.4.0        # Data augmentation
+torch>=2.2.1
+torchvision>=0.17.1
+ultralytics>=8.1.28          # YOLOv8
+opencv-python-headless>=4.9.0.80
+Pillow>=10.2.0
+scikit-image>=0.22.0         # SSIM for before/after comparison
+numpy>=1.26.4
+albumentations>=1.4.0        # Data augmentation
 
 # --- Model Export & Optimization ---
-onnx==1.16.0
-onnxruntime==1.17.1
+onnx>=1.16.0
+onnxruntime>=1.17.1
 # tflite-runtime           # Install separately on target device
 
 # --- MLOps & Experiment Tracking ---
-mlflow==2.11.1
-optuna==3.5.0                # Hyperparameter tuning
+mlflow>=2.11.1
+optuna>=3.5.0                # Hyperparameter tuning
 
 # --- Database ---
-sqlalchemy==2.0.28
-alembic==1.13.1
-aiosqlite==0.20.0            # Async SQLite (dev)
-asyncpg==0.29.0              # Async PostgreSQL (prod)
+sqlalchemy>=2.0.28
+alembic>=1.13.1
+aiosqlite>=0.20.0            # Async SQLite (dev)
+asyncpg>=0.29.0              # Async PostgreSQL (prod)
 
 # --- Auth & Security ---
 python-jose[cryptography]==3.3.0
@@ -54,7 +54,11 @@ PyYAML==6.0.1
 tenacity==8.2.3              # Retry logic
 aiofiles==23.2.1
 
+# --- Web Interface ---
+gradio>=4.21.0
+
 # --- Dev Tools ---
+
 black==24.3.0
 isort==5.13.2
 flake8==7.0.0
